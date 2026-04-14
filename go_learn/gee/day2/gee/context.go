@@ -9,6 +9,7 @@ import (
 // 代码最开头，给map[string]interface{}起了一个别名gee.H，构建JSON数据时，显得更简洁。
 type H map[string]interface{}
 
+// 设计了上下文，封装Request和Response，提供对JSON，HTML等返回类型的支持
 type Context struct {
 	Writer http.ResponseWriter
 	Req    *http.Request
@@ -28,10 +29,12 @@ func newContext(w http.ResponseWriter, req *http.Request) *Context {
 	}
 }
 
+// 返回key对应的值
 func (c *Context) PostForm(key string) string {
 	return c.Req.FormValue(key)
 }
 
+// 返回URL中对应的值
 func (c *Context) Query(key string) string {
 	return c.Req.URL.Query().Get(key)
 }
@@ -42,6 +45,7 @@ func (c *Context) Status(code int) {
 }
 
 func (c *Context) SetHeader(key string, value string) {
+	//给客户端返回一个响应头集合
 	c.Writer.Header().Set(key, value)
 }
 
